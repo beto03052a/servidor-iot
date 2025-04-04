@@ -1,39 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IoT Dashboard</title>
+  <meta charset="UTF-8">
+  <title>Monitor IoT</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
       text-align: center;
-      margin-top: 50px;
-      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
     }
     h1 {
       color: #333;
     }
-    #datos {
-      font-size: 1.5em;
-      margin-top: 20px;
+    .temp {
+      color: red;
+      font-size: 20px;
+    }
+    .hum {
+      color: blue;
+      font-size: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Monitor IoT - Temperatura y Humedad</h1>
-  <div id="datos">Cargando datos...</div>
+  <h1>🌡️ Monitor IoT - Temperatura y Humedad</h1>
+  <p class="temp">Temperatura: <span id="temp">-- °C</span></p>
+  <p class="hum">Humedad: <span id="hum">-- %</span></p>
 
   <script>
-    async function obtenerDatos() {
-      const res = await fetch('/api/ultimos-datos');
-      const datos = await res.json();
-      document.getElementById('datos').innerHTML =
-        `🌡️ Temperatura: <strong>${datos.temperatura} °C</strong><br>💧 Humedad: <strong>${datos.humedad} %</strong>`;
+    const url = "https://servidor-iot-production-042c.up.railway.app/api/ultimos-datos";
+
+    function actualizarDatos() {
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("temp").innerText = data.temperatura + " °C";
+          document.getElementById("hum").innerText = data.humedad + " %";
+        })
+        .catch(err => console.error("Error al obtener datos:", err));
     }
 
-    obtenerDatos();
-    setInterval(obtenerDatos, 5000); // cada 5 segundos
+    setInterval(actualizarDatos, 5000); // cada 5 segundos
+    actualizarDatos(); // al cargar
   </script>
 </body>
 </html>
