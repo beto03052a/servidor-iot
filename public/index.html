@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IoT Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    #datos {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Monitor IoT - Temperatura y Humedad</h1>
+  <div id="datos">Cargando datos...</div>
+
+  <script>
+    async function obtenerDatos() {
+      const res = await fetch('/api/ultimos-datos');
+      const datos = await res.json();
+      document.getElementById('datos').innerHTML =
+        `🌡️ Temperatura: <strong>${datos.temperatura} °C</strong><br>💧 Humedad: <strong>${datos.humedad} %</strong>`;
+    }
+
+    obtenerDatos();
+    setInterval(obtenerDatos, 5000); // cada 5 segundos
+  </script>
+</body>
+</html>
